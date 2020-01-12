@@ -37,7 +37,7 @@ function get_details($url) {
 			$keywords = $meta->getAttribute("content");
 	}
 	// Return our JSON string containing the title, description, keywords and URL.
-	return '{ "Title": "'.str_replace("\n", "", $title).'", "Description": "'.str_replace("\n", "", $description).'", "Keywords": "'.str_replace("\n", "", $keywords).'", "URL": "'.$url.'"},';
+	return '{ "Title": "'.str_replace("\n", "", $title).'", "Description": "'.str_replace("\n", "", $description).'", "Keywords": "'.str_replace("\n", "", $keywords).'", "URL": "'.$url.'"}';
 }
 function follow_links($url) {
 	// Give our function access to our crawl arrays.
@@ -78,8 +78,13 @@ function follow_links($url) {
 				$already_crawled[] = $l;
 				$crawling[] = $l;
 				// Output the page title, descriptions, keywords and URL. This output is
-				// piped off to an external file using the command line.
-				echo get_details($l)."\n";
+                // piped off to an external file using the command line.
+                $details = json_decode(get_details($l));
+                print_r($details)."\n";
+
+
+
+				//echo get_details($l)."\n";
 		}
 	}
 	// Remove an item from the array after we have crawled it.
@@ -91,6 +96,4 @@ function follow_links($url) {
 	}
 }
 // Begin the crawling process by crawling the starting link first.
-//follow_links($start);
-
-$pdo->query("SELECT * FROM index");
+follow_links($start);
