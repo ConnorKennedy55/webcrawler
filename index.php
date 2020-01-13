@@ -84,17 +84,17 @@ function follow_links($url) {
                 $details = json_decode(get_details($l));
                 echo $details ->URL." ";
 
-                $rows = $pdo->query("SELECT * FROM `dbo.searchEngine` WHERE url_hash='".md5($details->URL)."'");
+                $rows = $pdo->query("SELECT * FROM dbo.searchEngine WHERE url_hash='".md5($details->URL)."'");
                 $rows = $rows->fetchColumn();
                 
-                $params = array(':title' => $details->Title,':description' => $details->Description, ':keywords' => $details->Keywords, ':url' => $details->URL, ':url_hash' => md5($details->URL));
+                $params = array(title => $details->Title, description => $details->Description, keywords => $details->Keywords, url => $details->URL, url_hash => md5($details->URL));
 
                 if ($rows > 0) {
                     echo "UPDATE"."\n";
                 } else {
 
-                    if (!is_null($params[':title']) && !is_null($params[':description']) && !$params[':title'] != '') {
-                        $result = $pdo->prepare("INSERT INTO `dbo.searchEngine` VALUES ('', :title, :description, :keywords, :url, :url_hash)");
+                    if (!is_null($params[title]) && !is_null($params[description]) && !$params[title] != '') {
+                        $result = $pdo->prepare("INSERT INTO searchEngine VALUES ('', title, description, keywords, url, url_hash)");
                         $result = $result->execute($params);
                 }
 
