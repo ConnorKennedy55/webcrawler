@@ -84,7 +84,7 @@ function follow_links($url) {
                 $details = json_decode(get_details($l));
                 echo $details ->URL." ";
 
-                $rows = $pdo->query("SELECT * FROM `searchEngine` WHERE url_hash='".md5($details->URL)."'");
+                $rows = $pdo->query("SELECT * FROM `dbo.searchEngine` WHERE url_hash='".md5($details->URL)."'");
                 $rows = $rows->fetchColumn();
                 
                 $params = array(':title' => $details->Title,':description' => $details->Description, ':keywords' => $details->Keywords, ':url' => $details->URL, ':url_hash' => md5($details->URL));
@@ -94,7 +94,7 @@ function follow_links($url) {
                 } else {
 
                     if (!is_null($params[':title']) && !is_null($params[':description']) && !$params[':title'] != '') {
-                        $result = $pdo->prepare("INSERT INTO `searchEngine` VALUES ('', :title, :description, :keywords, :url, :url_hash)");
+                        $result = $pdo->prepare("INSERT INTO `dbo.searchEngine` VALUES ('', :title, :description, :keywords, :url, :url_hash)");
                         $result = $result->execute($params);
                 }
 
