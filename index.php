@@ -42,7 +42,9 @@ function get_details($url) {
 function follow_links($url) {
 	// Give our function access to our crawl arrays.
 	global $already_crawled;
-	global $crawling;
+    global $crawling;
+    global $pdo;
+
 	// The array that we pass to stream_context_create() to modify our User Agent.
 	$options = array('http'=>array('method'=>"GET", 'headers'=>"User-Agent: howBot/0.1\n"));
 	// Create the stream context.
@@ -80,9 +82,21 @@ function follow_links($url) {
 				// Output the page title, descriptions, keywords and URL. This output is
                 // piped off to an external file using the command line.
                 $details = json_decode(get_details($l));
-                print_r($details)."\n";
+                echo $details ->URL." ";
 
+                $rows = $pdo->query("SELECT * FROM `index` WHERE url_hash='".md5(details->URL)."'");
+                $rows = $rows->fetchColumn();
+                
+                $params = array(':title' => $details->Title,':description' => $details->Description, ':keywords' => $details->Keywords, ':url' => $details->URL, ':url_hash' => md5($details->URL));
 
+                if ($rows > 0) {
+                    echo "UPDATE"."\n";
+                } else {
+
+                    if (!is_null($params[':title']) && !is_null($params[':description']) && !$params[':title'] != '') {
+                        $result = $pdo->prepare("INSERT INTO `index` VALUES ('', :title, :description, :keywords, :url, :url_hash)");
+                        $result = $result->execute($params);
+                }
 
 				//echo get_details($l)."\n";
 		}
