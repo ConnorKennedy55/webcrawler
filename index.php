@@ -84,7 +84,7 @@ function follow_links($url) {
                 $details = json_decode(get_details($l));
                 echo $details ->URL." ";
 
-                $rows = $pdo->query("SELECT * FROM `index` WHERE url_hash='".md5(details->URL)."'");
+                $rows = $pdo->query("SELECT * FROM `index` WHERE url_hash='".md5($details->URL)."'");
                 $rows = $rows->fetchColumn();
                 
                 $params = array(':title' => $details->Title,':description' => $details->Description, ':keywords' => $details->Keywords, ':url' => $details->URL, ':url_hash' => md5($details->URL));
@@ -97,6 +97,8 @@ function follow_links($url) {
                         $result = $pdo->prepare("INSERT INTO `index` VALUES ('', :title, :description, :keywords, :url, :url_hash)");
                         $result = $result->execute($params);
                 }
+
+            }
 
 				//echo get_details($l)."\n";
 		}
